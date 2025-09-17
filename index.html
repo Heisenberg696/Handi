@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Management & Real-time Notifications</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Quick Auth Section -->
+    <div class="container">
+      <h1 class="section-title">Quick Authentication</h1>
+
+      <div id="authStatus" class="status disconnected">
+        Status: Not Authenticated
+      </div>
+
+      <div id="authSection" class="two-column">
+        <div>
+          <div class="form-group">
+            <label for="serverUrl">Server URL:</label>
+            <input type="text" id="serverUrl" value="http://localhost:4000" />
+          </div>
+          <div class="form-group">
+            <label for="loginEmail">Email:</label>
+            <input type="email" id="loginEmail" placeholder="Enter email" />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password:</label>
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Enter password"
+            />
+          </div>
+          <button onclick="login()">Login</button>
+          <button
+            class="success"
+            onclick="connectSocket()"
+            id="connectBtn"
+            disabled
+          >
+            Connect Socket
+          </button>
+        </div>
+
+        <div id="userInfo" class="user-info" style="display: none"></div>
+      </div>
+
+      <div id="socketStatus" class="status disconnected">
+        Socket: Disconnected
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="container">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('create')">
+          Create Job
+        </button>
+        <button class="tab" onclick="switchTab('manage')">Manage Jobs</button>
+      </div>
+
+      <!-- Create Job Tab -->
+      <div id="createTab" class="tab-content active">
+        <h1 class="section-title">
+          Create Job
+          <span
+            id="notificationCount"
+            class="notification-counter"
+            style="display: none"
+            >0</span
+          >
+        </h1>
+
+        <div class="two-column">
+          <div>
+            <div class="form-group">
+              <label for="workerId">Worker User ID:</label>
+              <input
+                type="text"
+                id="workerId"
+                placeholder="Enter the worker's user ID"
+              />
+              <small style="color: #6c757d"
+                >You can get this from another user's authentication info</small
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="jobTitle">Job Title:</label>
+              <input
+                type="text"
+                id="jobTitle"
+                placeholder="e.g., Fix kitchen sink"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="jobDescription">Job Description:</label>
+              <textarea
+                id="jobDescription"
+                rows="4"
+                placeholder="Detailed description of the job..."
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="jobRate">Rate (Optional):</label>
+              <input
+                type="number"
+                id="jobRate"
+                placeholder="e.g., 50"
+                step="0.01"
+                min="0"
+              />
+            </div>
+
+            <button onclick="createJob()" id="createJobBtn" disabled>
+              Create Job
+            </button>
+          </div>
+
+          <div>
+            <div class="jobs-section">
+              <div class="section-header">
+                <h3>Recent Jobs Created</h3>
+                <div class="filter-section">
+                  <label for="createdJobsFilter">Filter by status:</label>
+                  <select id="createdJobsFilter" onchange="filterCreatedJobs()">
+                    <option value="">All Jobs</option>
+                    <option value="pending">Pending</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="completed">Completed</option>
+                    <option value="declined">Declined</option>
+                  </select>
+                </div>
+              </div>
+              <div
+                class="jobs-summary"
+                id="createdJobsSummary"
+                style="display: none"
+              >
+                <small class="summary-text"
+                  >Showing <span id="createdJobsCount">0</span> jobs</small
+                >
+              </div>
+              <div id="jobsList">
+                <p class="empty-state">No jobs created yet...</p>
+              </div>
+              <button
+                onclick="fetchCreatedJobs()"
+                class="refresh-btn"
+                id="refreshCreatedJobsBtn"
+                disabled
+              >
+                Refresh Created Jobs
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manage Jobs Tab -->
+      <div id="manageTab" class="tab-content">
+        <h1 class="section-title">Job Management</h1>
+
+        <div class="two-column">
+          <div>
+            <div class="jobs-section">
+              <div class="section-header">
+                <h3>Jobs Assigned to Me</h3>
+                <div class="filter-section">
+                  <label for="assignedJobsFilter">Filter by status:</label>
+                  <select
+                    id="assignedJobsFilter"
+                    onchange="filterAssignedJobs()"
+                  >
+                    <option value="">All Jobs</option>
+                    <option value="pending">Pending</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="completed">Completed</option>
+                    <option value="declined">Declined</option>
+                  </select>
+                </div>
+              </div>
+              <div
+                class="jobs-summary"
+                id="assignedJobsSummary"
+                style="display: none"
+              >
+                <small class="summary-text"
+                  >Showing <span id="assignedJobsCount">0</span> jobs</small
+                >
+              </div>
+              <div id="assignedJobsList">
+                <p class="empty-state">No jobs assigned yet...</p>
+              </div>
+              <button
+                onclick="fetchAssignedJobs()"
+                id="refreshJobsBtn"
+                disabled
+              >
+                Refresh Jobs
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <div class="job-actions-section">
+              <h3>Job Actions</h3>
+              <p style="color: #6c757d" class="instructions">
+                Select a job from the left to view details and take actions.
+                Real-time notifications will be sent to the job creator.
+              </p>
+
+              <div id="jobActionsPanel" style="display: none">
+                <div class="selected-job-card">
+                  <div id="selectedJobDetails"></div>
+                </div>
+
+                <div class="job-actions">
+                  <button
+                    class="success"
+                    onclick="handleJobAction('accept')"
+                    id="acceptJobBtn"
+                    style="display: none"
+                  >
+                    ✓ Accept Job
+                  </button>
+                  <button
+                    class="danger"
+                    onclick="handleJobAction('decline')"
+                    id="declineJobBtn"
+                    style="display: none"
+                  >
+                    ✗ Decline Job
+                  </button>
+                  <button
+                    class="warning"
+                    onclick="handleJobAction('complete')"
+                    id="completeJobBtn"
+                    style="display: none"
+                  >
+                    ✓ Mark Complete
+                  </button>
+                </div>
+
+                <div
+                  class="action-history"
+                  id="actionHistory"
+                  style="display: none"
+                >
+                  <h4>Recent Actions</h4>
+                  <div id="actionHistoryList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="container" id="statsSection" style="display: none">
+      <h1 class="section-title">Job Statistics</h1>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="totalCreatedJobs">0</div>
+          <div class="stat-label">Jobs Created</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="totalAssignedJobs">0</div>
+          <div class="stat-label">Jobs Assigned</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="completedJobs">0</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="pendingJobs">0</div>
+          <div class="stat-label">Pending</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications Section -->
+    <div class="container">
+      <div class="notification-header">
+        <h1 class="section-title">Real-time Activity Log</h1>
+        <div class="notification-controls">
+          <button onclick="clearLog()" class="secondary">Clear Log</button>
+          <button
+            onclick="exportLog()"
+            class="secondary"
+            id="exportLogBtn"
+            style="display: none"
+          >
+            Export Log
+          </button>
+        </div>
+      </div>
+      <div class="log" id="log">
+        <div class="log-entry log-info">
+          <strong>Ready!</strong> Login and connect socket to start testing job
+          creation and notifications.
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
