@@ -1,0 +1,247 @@
+/* frontend/src/components/ImageUploader/ImageUploader.module.css */
+.container {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #000000;
+  border: 1px solid #1f1f1f;
+  border-radius: 8px;
+  transition: border-color 0.2s;
+}
+
+.container:hover {
+  border-color: #2a2a2a;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.label svg {
+  color: #3b82f6;
+}
+
+.uploadArea {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.imagePreview {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #1f1f1f;
+  border: 3px solid #1f1f1f;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.imagePreview:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pendingIndicator {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 20px;
+  height: 20px;
+  background-color: #0a0a0a;
+  border: 2px solid #3b82f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.pendingDot {
+  width: 8px;
+  height: 8px;
+  background-color: #3b82f6;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1f1f1f;
+}
+
+.placeholderIcon {
+  color: #525252;
+}
+
+.uploadControls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.uploadButton,
+.saveButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-family: inherit;
+  border: none;
+}
+
+.uploadButton {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+.uploadButton:hover:not(:disabled) {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.saveButton {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.saveButton:hover:not(:disabled) {
+  background-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.uploadButton:active:not(:disabled),
+.saveButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.uploadButton:disabled,
+.saveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spinningIcon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fileInput {
+  display: none;
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: #737373;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.pendingText {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.error {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #fca5a5;
+  background-color: #1a0a0a;
+  border: 1px solid #3f1f1f;
+  border-radius: 6px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.25rem;
+  }
+
+  .uploadArea {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .imagePreview {
+    width: 80px;
+    height: 80px;
+  }
+
+  .buttonGroup {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .uploadButton,
+  .saveButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .imagePreview {
+    width: 70px;
+    height: 70px;
+  }
+
+  .uploadButton,
+  .saveButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+  }
+}

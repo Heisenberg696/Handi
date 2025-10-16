@@ -7,7 +7,6 @@ const reviewSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Job",
       required: true,
-      unique: true, // each job can only have one review from the customer
     },
     reviewer: {
       type: mongoose.Schema.Types.ObjectId,
@@ -29,12 +28,14 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       trim: true,
       maxlength: 1000,
+      default: "",
     },
   },
   { timestamps: true }
 );
 
 // Ensure that a reviewer cannot leave multiple reviews for the same job
+// This is the ONLY unique index needed
 reviewSchema.index({ job: 1, reviewer: 1 }, { unique: true });
 
 module.exports = mongoose.model("Review", reviewSchema);

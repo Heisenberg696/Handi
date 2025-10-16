@@ -1,0 +1,55 @@
+/* frontend/src/components/StarRating/StarRating.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.starsWrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.star {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.star:hover:not(:disabled) {
+  transform: scale(1.1);
+  background-color: rgba(251, 191, 36, 0.1);
+}
+
+.star:disabled {
+  cursor: not-allowed;
+}
+
+.starIcon {
+  stroke-width: 1.5;
+}
+
+.star.filled .starIcon {
+  color: #fbbf24;
+  fill: #fbbf24;
+}
+
+.star:not(.filled) .starIcon {
+  color: #e5e7eb;
+  fill: none;
+}
+
+.ratingText {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}

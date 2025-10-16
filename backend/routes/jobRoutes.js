@@ -9,6 +9,7 @@ const {
   declineJob,
   getJobById,
   completeJob,
+  cancelJob,
 } = require("../controllers/jobController");
 
 const router = express.Router();
@@ -33,5 +34,8 @@ router.patch("/:id/decline", requireAuth, declineJob);
 
 // PATCH /api/jobs/:id/complete → worker marks job as completed
 router.patch("/:id/complete", requireAuth, completeJob);
+
+// PATCH /api/jobs/:id/cancel → customer or worker cancels job
+router.patch("/:id/cancel", requireAuth, cancelJob);
 
 module.exports = router;

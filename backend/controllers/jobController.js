@@ -6,7 +6,7 @@ const User = require("../models/User");
 // Create a new job
 const createJob = async (req, res) => {
   try {
-    const { workerId, title, description, rate } = req.body;
+    const { workerId, title, description, rate, images } = req.body;
     const customerId = req.user._id; // from requireAuth middleware
 
     // Validate required fields
@@ -16,13 +16,60 @@ const createJob = async (req, res) => {
       });
     }
 
+    // Validate workerId format (optional but recommended)
+    if (!workerId.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({
+        error: "Invalid worker ID format",
+      });
+    }
+
+    // Validate images if provided
+    if (images !== undefined) {
+      if (!Array.isArray(images)) {
+        return res.status(400).json({
+          error: "images must be an array",
+        });
+      }
+
+      // Validate each image object
+      for (let i = 0; i < images.length; i++) {
+        const img = images[i];
+        if (
+          !img ||
+          typeof img !== "object" ||
+          typeof img.url !== "string" ||
+          typeof img.public_id !== "string" ||
+          !img.url.trim() ||
+          !img.public_id.trim()
+        ) {
+          return res.status(400).json({
+            error: `Invalid image at index ${i}: each image must have 'url' and 'public_id' as non-empty strings`,
+          });
+        }
+
+        // Optional: Validate that public_id starts with allowed folder
+        if (!img.public_id.startsWith("handi/jobs/")) {
+          return res.status(400).json({
+            error: `Invalid image at index ${i}: public_id must be from handi/jobs folder`,
+          });
+        }
+      }
+    }
+
     // Check if worker exists
     const worker = await User.findById(workerId);
     if (!worker) {
       return res.status(404).json({ error: "Worker not found" });
     }
 
-    // Create the job
+    // Prevent users from posting jobs to themselves
+    if (workerId === customerId.toString()) {
+      return res.status(400).json({
+        error: "Cannot post a job to yourself",
+      });
+    }
+
+    // Build job data
     const jobData = {
       customer: customerId,
       worker: workerId,
@@ -31,8 +78,22 @@ const createJob = async (req, res) => {
       status: "pending",
     };
 
-    if (rate) jobData.rate = rate;
+    // Add optional fields if provided
+    if (rate !== undefined && rate !== null) {
+      const parsedRate = Number(rate);
+      if (isNaN(parsedRate) || parsedRate < 0) {
+        return res.status(400).json({
+          error: "Rate must be a valid non-negative number",
+        });
+      }
+      jobData.rate = parsedRate;
+    }
 
+    if (images && images.length > 0) {
+      jobData.images = images;
+    }
+
+    // Create the job
     const job = await Job.create(jobData);
 
     // Populate the job with user details
@@ -352,6 +413,100 @@ const completeJob = async (req, res) => {
   }
 };
 
+// cancel job function
+// New cancelJob controller function for backend/controllers/jobController.js
+
+const cancelJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const userId = req.user._id;
+
+    // Find job
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    // Check authorization: user must be customer or worker
+    const isCustomer = job.customer.toString() === userId.toString();
+    const isWorker = job.worker.toString() === userId.toString();
+
+    if (!isCustomer && !isWorker) {
+      return res.status(403).json({
+        error: "Not authorized to cancel this job",
+      });
+    }
+
+    // Check if cancellation is allowed based on status and role
+    let canCancel = false;
+
+    if (job.status === "pending") {
+      // Only customer can cancel pending jobs
+      canCancel = isCustomer;
+      if (!canCancel) {
+        return res.status(400).json({
+          error: "Only the customer can cancel a pending job",
+        });
+      }
+    } else if (job.status === "accepted") {
+      // Both customer and worker can cancel accepted jobs
+      canCancel = true;
+    } else if (
+      job.status === "completed" ||
+      job.status === "declined" ||
+      job.status === "cancelled"
+    ) {
+      // Cannot cancel completed, declined, or already cancelled jobs
+      return res.status(400).json({
+        error: `Cannot cancel a job with status: ${job.status}`,
+      });
+    }
+
+    if (!canCancel) {
+      return res.status(400).json({
+        error: "This job cannot be cancelled",
+      });
+    }
+
+    // Update status to cancelled
+    job.status = "cancelled";
+    await job.save();
+
+    // Determine the other party and build notification message
+    const cancellingUser = await User.findById(userId).select("username");
+    const cancellerName = cancellingUser ? cancellingUser.username : "A user";
+    const recipientId = isCustomer ? job.worker : job.customer;
+    const roleText = isCustomer ? "customer" : "worker";
+
+    const message = `${cancellerName} (${roleText}) has cancelled the job: ${job.title}`;
+
+    // Create notification for the other party
+    const notification = await Notification.create({
+      recipient: recipientId,
+      sender: userId,
+      type: "job_cancelled",
+      message,
+      jobId: job._id,
+    });
+
+    // Send real-time notification
+    const sendNotification = req.app.get("sendNotification");
+    if (typeof sendNotification === "function") {
+      sendNotification(recipientId.toString(), notification);
+    }
+
+    // Return updated job
+    const updatedJob = await Job.findById(job._id)
+      .populate("customer", "username email")
+      .populate("worker", "username email");
+
+    return res.status(200).json({ job: updatedJob, notification });
+  } catch (err) {
+    console.error("cancelJob error:", err);
+    return res.status(500).json({ error: "Server error while cancelling job" });
+  }
+};
+
 module.exports = {
   createJob,
   getAssignedJobs,
@@ -360,4 +515,5 @@ module.exports = {
   declineJob,
   getJobById,
   completeJob,
+  cancelJob,
 };

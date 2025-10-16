@@ -83,7 +83,7 @@ app.use(
 );
 app.use("/api/jobs", jobRoutes);
 app.use("/api/notifications", notificationRoutes);
-app.use("./api/reviews");
+app.use("/api/reviews", reviewRoutes);
 
 app.get("/", (req, res) => {
   res.send("Handi backend running...");

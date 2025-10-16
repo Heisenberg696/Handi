@@ -1,0 +1,250 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #1e1e1e;
+}
+
+.formWrapper {
+  background-color: #2d2d2d;
+  padding: 48px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #888;
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input {
+  padding: 18px 20px;
+  border: none;
+  border-radius: 12px;
+  background-color: #3a3a3a;
+  color: #ffffff;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.2s ease;
+  height: 56px;
+  border: 2px solid transparent;
+}
+
+.input::placeholder {
+  color: #888;
+}
+
+.input:focus {
+  background-color: #404040;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input:hover:not(:focus) {
+  background-color: #3e3e3e;
+}
+
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordInput {
+  padding: 18px 50px 18px 20px;
+  border: none;
+  border-radius: 12px;
+  background-color: #3a3a3a;
+  color: #ffffff;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.2s ease;
+  height: 56px;
+  width: 100%;
+  border: 2px solid transparent;
+}
+
+.passwordInput::placeholder {
+  color: #888;
+}
+
+.passwordInput:focus {
+  background-color: #404040;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.passwordInput:hover:not(:focus) {
+  background-color: #3e3e3e;
+}
+
+.toggleIcon {
+  position: absolute;
+  right: 16px;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggleIcon:hover {
+  color: #3b82f6;
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #ccc;
+  position: relative;
+}
+
+.checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  height: 18px;
+  width: 18px;
+  background-color: #3a3a3a;
+  border: 2px solid #555;
+  border-radius: 4px;
+  margin-right: 10px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.checkboxLabel:hover .checkmark {
+  border-color: #3b82f6;
+}
+
+.checkbox:checked ~ .checkmark {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox:checked ~ .checkmark:after {
+  display: block;
+}
+
+.forgotPassword {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.forgotPassword:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.error {
+  color: #ff6b6b;
+  font-size: 14px;
+  text-align: center;
+  margin: 8px 0;
+  padding: 12px;
+  background-color: rgba(255, 107, 107, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.submitButton {
+  background-color: #3b82f6;
+  color: #ffffff;
+  padding: 18px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+  height: 56px;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.submitButton:active:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.signupLink {
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+  margin-top: 24px;
+}
+
+.link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: #3b82f6;
+  text-decoration: underline;
+}

@@ -1,3 +1,4 @@
+// backend/models/Profile.js
 const mongoose = require("mongoose");
 
 const profileSchema = new mongoose.Schema(
@@ -11,17 +12,12 @@ const profileSchema = new mongoose.Schema(
     username: { type: String, required: true, immutable: true },
     email: { type: String, required: true, immutable: true },
     phone: { type: String },
-
-    // Profile picture (always an object with url + public_id)
     profilePicture: {
       url: { type: String, default: "" },
       public_id: { type: String, default: "" },
     },
-
     bio: { type: String },
-
     skills: [{ type: String }],
-
     // Portfolio images (array of objects)
     portfolioImages: [
       {
@@ -29,11 +25,26 @@ const profileSchema = new mongoose.Schema(
         public_id: { type: String, required: true },
       },
     ],
-
     location: { type: String },
     availability: { type: String },
-    rate: { type: Number, defaul: 0 },
-
+    rate: { type: Number, default: 0 },
+    // NEW: Category field for service professional type
+    category: {
+      type: String,
+      enum: [
+        "Plumbing",
+        "Electrical Work",
+        "Cleaning and Maintenance",
+        "Carpentry",
+        "Drainage and Waste Management",
+        "Painting",
+        "Handyman",
+        "Roofing Carpentry",
+        "Masonry",
+        "MetalWork",
+        "Outdoor Maintenance",
+      ],
+    },
     reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
     rating: { type: Number, default: 0 },
   },

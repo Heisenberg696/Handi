@@ -1,6 +1,7 @@
 // backend/controllers/profileController.js
 const Profile = require("../models/Profile");
 const User = require("../models/User");
+const validator = require("validator");
 
 // GET /api/profile/me?page=1&limit=10
 const getMyProfile = async (req, res) => {
@@ -45,7 +46,7 @@ const getMyProfile = async (req, res) => {
   }
 };
 
-// PUT /api/profile/me (unchanged, except still normalizing images/skills)
+// PUT /api/profile/me (UPDATED - added category support)
 const updateMyProfile = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -57,7 +58,29 @@ const updateMyProfile = async (req, res) => {
       location,
       availability,
       rate,
+      phone,
+      category, // NEW
     } = req.body;
+
+    // Validate phone number if provided
+    if (phone !== undefined && phone !== "") {
+      if (!validator.isMobilePhone(phone, "en-GH")) {
+        return res.status(400).json({ error: "Invalid phone number format" });
+      }
+
+      // Check if phone number is already taken by another user
+      const existingUser = await User.findOne({
+        phone,
+        _id: { $ne: userId }, // Exclude current user
+      });
+
+      if (existingUser) {
+        return res.status(400).json({ error: "Phone number already in use" });
+      }
+
+      // Update phone in User model as well
+      await User.findByIdAndUpdate(userId, { phone });
+    }
 
     let skillsArr = [];
     if (typeof skills === "string") {
@@ -95,6 +118,8 @@ const updateMyProfile = async (req, res) => {
       ...(location !== undefined && { location }),
       ...(availability !== undefined && { availability }),
       ...(rate !== undefined && { rate }),
+      ...(phone !== undefined && { phone }),
+      ...(category !== undefined && { category }), // NEW
     };
 
     const updatedProfile = await Profile.findOneAndUpdate(
@@ -147,19 +172,23 @@ const getProfileByUserId = async (req, res) => {
   }
 };
 
-// GET /api/profile?q=&skill=&location=&page=&limit= (unchanged)
+// GET /api/profile?q=&skill=&location=&category=&page=&limit= (UPDATED - added category filter)
 const searchProfiles = async (req, res) => {
   try {
-    const { q, skill, location, page = 1, limit = 20 } = req.query;
+    const { q, skill, location, category, page = 1, limit = 20 } = req.query;
     const filter = {};
 
     if (q) filter.$text = { $search: q };
     if (skill) filter.skills = skill;
     if (location) filter.location = { $regex: location, $options: "i" };
+    if (category) filter.category = category; // NEW: Filter by category
 
     const skip = (Math.max(1, Number(page)) - 1) * Number(limit);
     const total = await Profile.countDocuments(filter);
-    const profiles = await Profile.find(filter).skip(skip).limit(Number(limit));
+    const profiles = await Profile.find(filter)
+      .skip(skip)
+      .limit(Number(limit))
+      .sort({ createdAt: -1 }); // Sort by newest first
 
     return res.status(200).json({
       meta: { total, page: Number(page), limit: Number(limit) },

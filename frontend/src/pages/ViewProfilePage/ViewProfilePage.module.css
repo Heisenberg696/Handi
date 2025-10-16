@@ -1,0 +1,604 @@
+/* frontend/src/pages/ViewProfilePage/ViewProfilePage.module.css */
+.container {
+  min-height: calc(100vh - 60px);
+  background-color: #1a1a1a;
+}
+
+/* Profile Header Banner */
+.banner {
+  background-color: #1a1a1a;
+  padding: 3rem 0 2rem;
+  border-bottom: 1px solid #1f1f1f;
+}
+
+.profileHeader {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.profilePictureWrapper {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #1f1f1f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #1f1f1f;
+  transition: all 0.3s ease;
+}
+
+.profilePictureWrapper:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.profilePicture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.defaultAvatar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1f1f1f;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #a3a3a3;
+  margin: 0;
+  font-weight: 500;
+}
+
+.joinedDate {
+  font-size: 0.875rem;
+  color: #737373;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+/* Action Buttons */
+.editButton,
+.postJobButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editButton {
+  background-color: #1f1f1f;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
+}
+
+.editButton:hover {
+  background-color: #2a2a2a;
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+.postJobButton {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+.postJobButton:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+.postJobButton:active,
+.editButton:active {
+  transform: translateY(0);
+}
+
+/* Tabs */
+.tabs {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  gap: 2rem;
+  border-bottom: 1px solid #1a1a1a;
+  background-color: #1f1f1f;
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: 1rem 0;
+  color: #737373;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tab:hover {
+  color: #ffffff;
+}
+
+.activeTab {
+  color: #ffffff;
+}
+
+.activeTab::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #3b82f6;
+}
+
+/* Content */
+.content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Section */
+.section {
+  margin-bottom: 3rem;
+  background-color: #0a0a0a;
+  border: 1px solid #1f1f1f;
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #1f1f1f;
+}
+
+.bio {
+  font-size: 1rem;
+  color: #a3a3a3;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Contact Section */
+.contactGrid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.contactItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #000000;
+  border: 1px solid #1f1f1f;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.contactItem:hover {
+  border-color: #3b82f6;
+  background-color: #0a0a0a;
+}
+
+.contactLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: #737373;
+  font-weight: 600;
+}
+
+.contactLabel svg {
+  color: #3b82f6;
+}
+
+.contactValue {
+  font-size: 1rem;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* Professional Details */
+.detailsGrid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: #000000;
+  border: 1px solid #1f1f1f;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.detailItem:hover {
+  border-color: #3b82f6;
+  background-color: #0a0a0a;
+}
+
+.detailLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: #737373;
+  font-weight: 600;
+}
+
+.detailLabel svg {
+  color: #3b82f6;
+}
+
+.detailValue {
+  font-size: 1rem;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* Skills */
+.skillsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skillTag {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid #3b82f6;
+  transition: all 0.2s;
+}
+
+.skillTag:hover {
+  background-color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+/* Rating Summary */
+.ratingSummary {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #000000;
+  border-radius: 8px;
+  border: 1px solid #1f1f1f;
+}
+
+.ratingDisplay {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.ratingStars {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.ratingStar {
+  color: #fbbf24;
+  width: 28px;
+  height: 28px;
+}
+
+.ratingStar.filled {
+  color: #fbbf24;
+  fill: #fbbf24;
+}
+
+.ratingStar:not(.filled) {
+  color: #404040;
+  fill: none;
+}
+
+.ratingText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ratingValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.ratingCount {
+  font-size: 0.875rem;
+  color: #737373;
+  font-weight: 500;
+}
+
+/* Reviews List */
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reviewsLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  color: #fbbf24;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.noReviews {
+  padding: 2rem;
+  text-align: center;
+  color: #9ca3af;
+  background-color: #000000;
+  border-radius: 8px;
+  border: 1px dashed #1f1f1f;
+}
+
+/* Portfolio Grid */
+.portfolioGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.portfolioItem {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #000000;
+  border: 1px solid #1f1f1f;
+  transition: all 0.2s;
+}
+
+.portfolioItem:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.portfolioImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.portfolioImage:hover {
+  transform: scale(1.1);
+}
+
+/* Empty Portfolio State */
+.emptyPortfolio {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: #737373;
+  background-color: #000000;
+  border: 1px solid #1f1f1f;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.emptyIcon {
+  color: #525252;
+}
+
+.emptyPortfolio p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Loading & Error States */
+.loading,
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: #737373;
+}
+
+.error {
+  background-color: #0a0a0a;
+  border: 1px solid #1f1f1f;
+  border-radius: 8px;
+  padding: 3rem 2rem;
+}
+
+.errorIcon {
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+.error h3 {
+  color: #ffffff;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+}
+
+.error p {
+  margin: 0 0 1.5rem 0;
+  color: #a3a3a3;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #1f1f1f;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.backButton:hover {
+  background-color: #2a2a2a;
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .banner {
+    padding: 2rem 0 1.5rem;
+  }
+
+  .profilePictureWrapper {
+    width: 120px;
+    height: 120px;
+  }
+
+  .name {
+    font-size: 1.5rem;
+  }
+
+  .content {
+    padding: 1.5rem 1rem;
+  }
+
+  .section {
+    padding: 1.5rem;
+  }
+
+  .tabs {
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .tab {
+    font-size: 0.9rem;
+  }
+
+  .contactItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .ratingDisplay {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .ratingStar {
+    width: 24px;
+    height: 24px;
+  }
+
+  .ratingValue {
+    font-size: 1.5rem;
+  }
+
+  .portfolioGrid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .editButton,
+  .postJobButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .profilePictureWrapper {
+    width: 100px;
+    height: 100px;
+  }
+
+  .name {
+    font-size: 1.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .ratingStar {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ratingValue {
+    font-size: 1.25rem;
+  }
+}

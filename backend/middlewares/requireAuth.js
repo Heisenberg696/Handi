@@ -1,3 +1,4 @@
+// backend/middlewares/requireAuth.js
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
@@ -12,9 +13,16 @@ const requireAuth = async (req, res, next) => {
 
   try {
     const { _id } = jwt.verify(token, process.env.SECRET);
-    req.user = await User.findById(_id).select("_id username email");
+    // Select all fields needed for authorization checks
+    req.user = await User.findById(_id).select("_id username email phone");
+
+    if (!req.user) {
+      return res.status(401).json({ error: "User not found" });
+    }
+
     next();
   } catch (error) {
+    console.error("Auth error:", error.message);
     res.status(401).json({ error: "Request not authorized" });
   }
 };

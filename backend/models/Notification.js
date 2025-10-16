@@ -21,15 +21,22 @@ const notificationSchema = new mongoose.Schema(
         "job_declined",
         "job_completed",
         "job_cancelled",
+        "review_received",
       ],
       required: true,
     },
-    message: { type: String, required: true },
+    message: {
+      type: String,
+      required: true,
+    },
     jobId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Job",
     },
-    read: { type: Boolean, default: false },
+    read: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
