@@ -20,20 +20,17 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-// Allowed origins for CORS
+// ✅ FIXED: Allowed origins for CORS - Simplified array-based approach
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:4000",
-  process.env.FRONTEND_URL, // We'll set this environment variable on Render later
+  "https://handi-three.vercel.app", // Your production frontend URL
 ];
 
-// Remove undefined/null values from allowedOrigins
-const validOrigins = allowedOrigins.filter((origin) => origin);
-
-// Socket.io setup
+// ✅ FIXED: Socket.io setup with direct array-based CORS
 const io = new Server(server, {
   cors: {
-    origin: validOrigins.length > 0 ? validOrigins : "*",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -77,24 +74,10 @@ const sendNotification = (userId, notification) => {
 app.set("io", io);
 app.set("sendNotification", sendNotification);
 
-// CORS Middleware
+// ✅ FIXED: CORS Middleware - Simplified direct array approach
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-
-      if (validOrigins.length === 0) {
-        // If no origins configured, allow all (temporary for initial deployment)
-        return callback(null, true);
-      }
-
-      if (validOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: allowedOrigins,
     credentials: true,
   })
 );
@@ -130,9 +113,7 @@ mongoose
     server.listen(PORT, () => {
       console.log(`Server + Socket.io running on port ${PORT}`);
       console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
-      console.log(
-        `Allowed origins: ${validOrigins.join(", ") || "ALL (temporary)"}`
-      );
+      console.log(`Allowed origins: ${allowedOrigins.join(", ")}`);
     });
   })
   .catch((error) => {
