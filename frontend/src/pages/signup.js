@@ -5,6 +5,9 @@ import { Eye, EyeOff } from "lucide-react";
 import useAuthStore from "../store/useAuthStore";
 import styles from "./signup.module.css";
 
+// ✅ ADD THIS LINE - Get API URL from environment variable
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
+
 const Signup = () => {
   const navigate = useNavigate();
   const authenticate = useAuthStore((state) => state.authenticate);
@@ -57,8 +60,9 @@ const Signup = () => {
         ...(formData.phone && { phone: formData.phone }),
       };
 
+      // ✅ FIXED - Use API_URL variable instead of hardcoded URL
       const response = await axios.post(
-        "http://localhost:4000/api/user/signup",
+        `${API_URL}/api/user/signup`,
         signupData
       );
 

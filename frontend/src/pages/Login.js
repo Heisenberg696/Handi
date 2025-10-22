@@ -5,6 +5,9 @@ import { Eye, EyeOff } from "lucide-react";
 import useAuthStore from "../store/useAuthStore";
 import styles from "./login.module.css";
 
+// ✅ GET API URL FROM ENVIRONMENT VARIABLE
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
+
 const Login = () => {
   const navigate = useNavigate();
   const authenticate = useAuthStore((state) => state.authenticate);
@@ -36,10 +39,8 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:4000/api/user/login",
-        formData
-      );
+      // ✅ USE API_URL VARIABLE INSTEAD OF HARDCODED URL
+      const response = await axios.post(`${API_URL}/api/user/login`, formData);
 
       // Authenticate user (will be stored in localStorage automatically)
       authenticate(response.data.user, response.data.token);
